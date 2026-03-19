@@ -1,0 +1,13 @@
+{
+  "name": "schema-api-generator",
+  "version": "1.0.0",
+  "description": "Generate simple CRUD endpoints from a JSON schema",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
