@@ -1,45 +1,43 @@
 const express = require("express");
-const { z } = require("zod");
+const buildZodSchema = require("../utils/buildZodSchema");
 
-const router = express.Router();
+function createUsersRouter(schema) {
+  const router = express.Router();
+  const users = [{ id: "1", name: "Jeremy", email: "jeremy@example.com" }];
+  const userInputSchema = buildZodSchema(schema);
 
-const users = [{ id: "1", name: "Jeremy", email: "jeremy@example.com" }];
+  router.get("/", (req, res) => {
+    res.json(users);
+  });
 
-const userInputSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  email: z.string().email(),
-});
+  router.get("/:id", (req, res) => {
+    const user = users.find((item) => item.id === req.params.id);
 
-router.get("/", (req, res) => {
-  res.json(users);
-});
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
-router.get("/:id", (req, res) => {
-  const user = users.find((item) => item.id === req.params.id);
+    res.json(user);
+  });
 
-  if (!user) {
-    return res.status(404).json({ error: "User not found" });
-  }
+  router.post("/", (req, res) => {
+    const result = userInputSchema.safeParse(req.body);
 
-  res.json(user);
-});
+    if (!result.success) {
+      return res.status(400).json({
+        error: "Invalid user input",
+        details: result.error.flatten(),
+      });
+    }
 
-router.post("/", (req, res) => {
-  const result = userInputSchema.safeParse(req.body);
+    const newUser = result.data;
 
-  if (!result.success) {
-    return res.status(400).json({
-      error: "Invalid user input",
-      details: result.error.flatten(),
-    });
-  }
+    users.push(newUser);
 
-  const newUser = result.data;
+    res.status(201).json(newUser);
+  });
 
-  users.push(newUser);
+  return router;
+}
 
-  res.status(201).json(newUser);
-});
-
-module.exports = router;
+module.exports = createUsersRouter;

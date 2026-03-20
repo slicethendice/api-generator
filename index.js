@@ -1,7 +1,7 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-const usersRouter = require("./routes/users");
+const createUsersRouter = require("./routes/users");
 
 const app = express();
 const PORT = 4040;
@@ -17,7 +17,7 @@ app.get("/health", (req, res) => {
   res.json({ ok: true });
 });
 
-app.use("/users", usersRouter);
+app.use("/users", createUsersRouter(schema));
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

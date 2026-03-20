@@ -1,8 +1,15 @@
 {
   "name": "user",
   "fields": {
-    "id": "string",
-    "name": "string",
-    "email": "string"
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    }
   }
 }
