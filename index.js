@@ -7,14 +7,41 @@ const PORT = 4040;
 
 app.use(express.json());
 
-// load schema
 const schemaPath = path.join(__dirname, "schema", "user.json");
 const schema = JSON.parse(fs.readFileSync(schemaPath, "utf-8"));
 
 console.log("Loaded schema:", schema);
 
+const users = [{ id: "1", name: "Jeremy", email: "jeremy@example.com" }];
+
 app.get("/health", (req, res) => {
   res.json({ ok: true });
+});
+
+app.get("/users", (req, res) => {
+  res.json(users);
+});
+
+app.get("/users/:id", (req, res) => {
+  const user = users.find((item) => item.id === req.params.id);
+
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  res.json(user);
+});
+
+app.post("/users", (req, res) => {
+  const newUser = {
+    id: req.body.id,
+    name: req.body.name,
+    email: req.body.email,
+  };
+
+  users.push(newUser);
+
+  res.status(201).json(newUser);
 });
 
 app.listen(PORT, () => {
