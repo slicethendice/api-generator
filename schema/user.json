@@ -1,0 +1,8 @@
+{
+  "name": "user",
+  "fields": {
+    "id": "string",
+    "name": "string",
+    "email": "string"
+  }
+}
